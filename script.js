@@ -298,6 +298,24 @@ function loadSettings() {
         document.getElementById('alarm-sound').value = soundPath.slice(7);
         curAlarm = new Audio(soundPath);
     }
+    if (localStorage.getItem('days')!='') {
+        days = myLocalStorage.get('days');
+        document.getElementById('days').textContent = days + " days";
+    }
+    if (localStorage.getItem('hours')!='') {
+        hours = myLocalStorage.get('hours');
+        document.getElementById('hrs').textContent = hours + " days";
+    }
+    if (localStorage.getItem('minutes')!='') {
+        minutes = myLocalStorage.get('minutes');
+        if (minutes!=null) document.getElementById('mins').textContent = minutes + " minutes";
+    }
 }
 
 loadSettings();
+
+window.onbeforeunload = function(){
+    myLocalStorage.set('days', days);
+    myLocalStorage.set('hours', hours);
+    myLocalStorage.set('minutes', minutes);
+ }

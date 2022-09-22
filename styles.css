@@ -1,0 +1,179 @@
+.flex-container {
+    display: flex;
+}
+
+.grid-container {
+    display: grid;
+}
+
+.main-body {
+    justify-content: space-around;
+}
+
+.main-body > div {
+    flex: 1;
+}
+
+body {
+    background-color: #1C6758;
+    color: white;
+    font-family: 'arial';
+}
+
+ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+li {
+    display: flex;
+    flex-wrap: wrap;
+    margin: 5px;
+}
+
+li > .task-completed, .task-default {
+    flex: 2;
+    text-decoration-thickness: 2px;
+}
+
+.task-completed {
+    text-decoration: line-through;
+}
+.task-default {
+    text-decoration: none;
+}
+
+
+#setting-container > div {
+    display: flex;
+    justify-content: space-between;
+    margin: 25px;
+}
+
+#session-selection > div {
+    flex: 1;
+    display: flex;
+    justify-content: space-evenly;
+}
+#session-selection input {
+    opacity: 0;
+    width: 0;
+    position: fixed;
+}
+#session-selection label {
+    display: inline-block;
+    padding: 10px 20px;
+    font-size: 18px;
+    border-radius: 4px;
+}
+#session-selection input:checked + label {
+    background-color:#3D8361;
+}
+#session-selection label:hover {
+    background-color: #3D8361;
+}
+
+#setting-container input {
+    width: 100px;
+}
+
+.section-title {
+    font-size: larger;
+}
+
+button {
+    background-color: #1C6758;
+    border: none;
+    color: white;
+    font-size: 16px;
+    border-radius: 4px;
+}
+button:hover {
+    background-color: #3D8361;
+}
+
+/* div {
+    border: 1px solid red;
+} */
+
+#start-btn, #stop-btn {
+    font-size: 30px;
+}
+
+input[type=number] {
+    border: none;
+}
+
+input[type='range'] {
+    overflow: hidden;
+    width: 80px;
+    -webkit-appearance: none;
+}
+  
+input[type='range']::-webkit-slider-runnable-track {
+    height: 10px;
+    -webkit-appearance: none;
+    color: #13bba4;
+    margin-top: -1px;
+}
+  
+input[type='range']::-webkit-slider-thumb {
+    width: 10px;
+    -webkit-appearance: none;
+    height: 10px;
+    cursor: ew-resize;
+    background: #3D8361;
+    box-shadow: -80px 0 0 80px #3D8361;
+}
+
+
+
+
+/* The switch - the box around the slider */
+.switch {
+    position: relative;
+    display: inline-block;
+    width: 52px;
+    height: 20px;
+}
+/* Hide default HTML checkbox */
+.switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+/* The slider */
+.sli {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ccc;
+    -webkit-transition: .4s;
+    transition: .4s;
+}
+.sli:before {
+    position: absolute;
+    content: "";
+    height: 20px;
+    width: 26px;
+
+    background-color: white;
+    -webkit-transition: .4s;
+    transition: .4s;
+}
+input:checked + .sli {
+    background-color: #3D8361;
+}
+input:focus + .sli {
+    box-shadow: 0 0 1px #1C6758;
+}
+input:checked + .sli:before {
+    -webkit-transform: translateX(26px);
+    -ms-transform: translateX(26px);
+    transform: translateX(26px);
+}
+  

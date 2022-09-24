@@ -15,28 +15,40 @@ let myLocalStorage = {
     }
 };
 
+
 class Countdown {
     constructor(countdown, display, nextCoundownName, cycleLength=1) {
         this.countdown = countdown; //in seconds
-        this.timer = countdown;
         this.interval = null;
         this.display = display;
         this.nextCoundownName = nextCoundownName;
         this.cycleLength = cycleLength;
         this.curCycle = cycleLength;
+        this.startTimestamp; //in ms
     }
     start() {
         if (--this.curCycle==0) {
             this.curCycle = this.cycleLength;
-            console.log('start function entered');
-            this.timer -= 1;
             let that = this;
+            this.startTimestamp = lastTimestamp = performance.now();
+
             this.interval = setInterval(function() {
-                that.display.textContent = convertSecondsToMinSecString(that.timer); 
+                const pNow = performance.now()
+    
                 if (curCountdownName=='pomodoro') {
-                    updateTotalTime();
+                    const diff = pNow - lastTimestamp;
+                    if (diff > 60000) {
+                        totalTime += diff;
+                        lastTimestamp = pNow;
+                        updateTotalTimeDisplay();
+                    }
                 }
-                if (--that.timer < 0) {
+
+                const sec = (pNow-that.startTimestamp)/1000;
+                that.display.textContent = document.title = convertSecondsToMinSecString(that.countdown - Math.floor(sec)); 
+                document.title += ' ' + curCountdownName;
+
+                if (sec >= that.countdown) {
                     curAlarm.play();
                     if (isAutoSwitching) {
                         switchCountdown(that.nextCoundownName, false);
@@ -44,6 +56,7 @@ class Countdown {
                         that.reset();
                     }
                 } 
+                
             }, 1000);
         } else {
             if (isAutoSwitching) {
@@ -59,8 +72,7 @@ class Countdown {
     }
     reset() { //stop timer and set timer back to full
         this.stop();
-        this.timer = this.countdown;
-        this.display.textContent = convertSecondsToMinSecString(this.timer); 
+        this.display.textContent = convertSecondsToMinSecString(this.countdown); 
         showStart(true);
     }
 }
@@ -239,34 +251,28 @@ document.getElementById('alarm-volume-slider').oninput = function() {
 
 
 //total time tracker
-let seconds = 0;
-let minutes = 59;
-let hours = 0;
-let days = 0
+let lastTimestamp;
+let totalTime = 0; //in the unit of performance.now()
+function updateTotalTimeDisplay() {
+    const totalMinutes = Math.floor(totalTime/60000);
+    const minutes = totalMinutes % 60;
+    const totalHours = (totalMinutes - minutes) / 60;
+    const hours = totalHours % 24;
+    const days = (totalHours - hours) / 24;
 
-function updateTotalTime() {
-    if (++seconds==60) {
-        seconds = 0;
-        if (++minutes==60) {
-            minutes = 0;
-            const hourElem = document.getElementById('hrs');
-            hourElem.style.display = "inline";
-            if (++hours==24) {
-                hours = 0;
-                const dayElem = document.getElementById('days');
-                dayElem.style.display = "inline";
-                if (++days==365) {
-                    days = 0;
-                }
-                dayElem.textContent = days + " days";
-            }
-            hourElem.textContent = hours + " hours";
-        } 
-        document.getElementById('mins').textContent = minutes + " minutes";
+    let t = document.getElementById('mins');
+    t.textContent = minutes + ' minutes';
+    if (totalMinutes >= 60) {
+        t = document.getElementById('hrs');
+        t.style.display = 'inline';
+        t.textContent = hours + ' hours';
+        if (totalMinutes >= 1440) {
+            document.getElementById('days').style.display = 'inline';
+            t.textContent = days + ' days';
+        }
     }
+    myLocalStorage.set('totalTime', totalTime);
 }
-
-
 
 function loadSettings() {
     if (localStorage.getItem('autostart')) {
@@ -276,6 +282,7 @@ function loadSettings() {
     if (localStorage.getItem('pomodoro')) {
         pomoCountdown.countdown = myLocalStorage.get('pomodoro');
         document.getElementById('pomo-time').value = parseInt(pomoCountdown.countdown/60);
+        timerDisplay.textContent = convertSecondsToMinSecString(pomoCountdown.countdown);
     }
     if (localStorage.getItem('shortBreak')) {
         shortBreakCountdown.countdown =  myLocalStorage.get('shortBreak');
@@ -293,29 +300,21 @@ function loadSettings() {
         curAlarm.volume = vol / 100.0;
         document.getElementById('alarm-volume-slider').value = vol;
     } 
+    if (localStorage.getItem('totalTime')!='') {
+        totalTime = myLocalStorage.get('totalTime');
+        updateTotalTimeDisplay();
+    }
     if (localStorage.getItem('alarmString')!='') {
         const soundPath = myLocalStorage.get('alarmString');
-        document.getElementById('alarm-sound').value = soundPath.slice(7);
-        curAlarm = new Audio(soundPath);
-    }
-    if (localStorage.getItem('days')!='') {
-        days = myLocalStorage.get('days');
-        document.getElementById('days').textContent = days + " days";
-    }
-    if (localStorage.getItem('hours')!='') {
-        hours = myLocalStorage.get('hours');
-        document.getElementById('hrs').textContent = hours + " days";
-    }
-    if (localStorage.getItem('minutes')!='') {
-        minutes = myLocalStorage.get('minutes');
-        if (minutes!=null) document.getElementById('mins').textContent = minutes + " minutes";
+        if (soundPath!=null) {
+            document.getElementById('alarm-sound').value = soundPath.slice(7);
+            curAlarm = new Audio(soundPath);
+        }
     }
 }
 
 loadSettings();
 
-window.onbeforeunload = function(){
-    myLocalStorage.set('days', days);
-    myLocalStorage.set('hours', hours);
-    myLocalStorage.set('minutes', minutes);
- }
+function clearStorage() {
+    localStorage.clear();
+}

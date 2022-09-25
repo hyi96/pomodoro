@@ -17,55 +17,42 @@ let myLocalStorage = {
 
 
 class Countdown {
-    constructor(countdown, display, nextCoundownName, cycleLength=1) {
+    constructor(countdown, display, nextCoundownName) {
         this.countdown = countdown; //in seconds
         this.interval = null;
         this.display = display;
         this.nextCoundownName = nextCoundownName;
-        this.cycleLength = cycleLength;
-        this.curCycle = cycleLength;
         this.startTimestamp; //in ms
     }
     start() {
-        if (--this.curCycle==0) {
-            this.curCycle = this.cycleLength;
-            let that = this;
-            this.startTimestamp = lastTimestamp = performance.now();
+        let that = this;
+        this.startTimestamp = lastTimestamp = performance.now();
 
-            this.interval = setInterval(function() {
-                const pNow = performance.now()
-    
-                if (curCountdownName=='pomodoro') {
-                    const diff = pNow - lastTimestamp;
-                    if (diff > 60000) {
-                        totalTime += diff;
-                        lastTimestamp = pNow;
-                        updateTotalTimeDisplay();
-                    }
+        this.interval = setInterval(function() {
+            const pNow = performance.now()
+
+            if (curCountdownName=='pomodoro') {
+                const diff = pNow - lastTimestamp;
+                if (diff > 60000) {
+                    totalTime += diff;
+                    lastTimestamp = pNow;
+                    updateTotalTimeDisplay();
                 }
-
-                const sec = (pNow-that.startTimestamp)/1000;
-                that.display.textContent = document.title = convertSecondsToMinSecString(that.countdown - Math.floor(sec)); 
-                document.title += ' ' + curCountdownName;
-
-                if (sec >= that.countdown) {
-                    curAlarm.play();
-                    if (isAutoSwitching) {
-                        switchCountdown(that.nextCoundownName, false);
-                    } else {
-                        that.reset();
-                    }
-                } 
-                
-            }, 1000);
-        } else {
-            if (isAutoSwitching) {
-                switchCountdown(this.nextCoundownName, false);
-            } else {
-                this.reset();
-                this.curCycle = this.cycleLength;
             }
-        }
+
+            const sec = (pNow-that.startTimestamp)/1000;
+            that.display.textContent = document.title = convertSecondsToMinSecString(that.countdown - Math.floor(sec)); 
+            document.title += ' ' + curCountdownName;
+
+            if (sec >= that.countdown) {
+                curAlarm.play();
+                if (isAutoSwitching) {
+                    switchCountdown(that.nextCoundownName, false);
+                } else {
+                    that.reset();
+                }
+            } 
+        }, 1000);
     }
     stop() {
         if (this.interval!=null) clearInterval(this.interval);
@@ -84,8 +71,8 @@ const longBreakOver = new Event('longBreakOver');
 
 const timerDisplay = document.getElementById('timer');
 const pomoCountdown = new Countdown(1500, timerDisplay, 'short-break');
-const shortBreakCountdown = new Countdown(300, timerDisplay, 'long-break');
-const longBreakCountdown = new Countdown(900, timerDisplay, 'pomodoro', 4);
+const shortBreakCountdown = new Countdown(300, timerDisplay, 'pomodoro');
+const longBreakCountdown = new Countdown(900, timerDisplay, 'pomodoro');
 let curCountdownName = 'pomodoro';
 timerDisplay.textContent = convertSecondsToMinSecString(pomoCountdown.countdown);
 const radioCountdownMap = {'pomodoro': pomoCountdown, 'short-break': shortBreakCountdown, 'long-break': longBreakCountdown};
@@ -110,12 +97,26 @@ function stopCountdown() {
     showStart(true);
 }
 
+let interval = 4;
+let curInterval = interval;
 function switchCountdown(countdownName, isUserInput) {
+    const auto = isAutoSwitching && !isUserInput;
+    if (countdownName=='short-break') {
+        if (auto) {
+            if (--curInterval==0) {
+                countdownName = 'long-break';
+                curInterval = interval;
+            } 
+        } else {
+            curInterval = interval;
+        }
+    }
+
     radioCountdownMap[curCountdownName].reset();
     curCountdownName = countdownName;
     radioCountdownMap[curCountdownName].reset();
     
-    if (isAutoSwitching && !isUserInput) {
+    if (auto) {
         document.getElementById(curCountdownName).checked = true;
         startCountdown();
         return;
@@ -209,10 +210,10 @@ function saveSettings() {
     if (radioCountdownMap[curCountdownName].interval==null) {
         radioCountdownMap[curCountdownName].reset();
     }
-    const newInterval = document.getElementById('interval');
+    const newInterval = document.getElementById('interval').value;
     if (newInterval.length>0) {
-        longBreakCountdown.cycleLength = parseInt(countdownString);
-        myLocalStorage.set('interval', longBreakCountdown.cycleLength);
+        interval = parseInt(newInterval);
+        myLocalStorage.set('interval', interval);
     }
     hideOrShowById('left');
 }
@@ -293,7 +294,7 @@ function loadSettings() {
         document.getElementById('long-break-time').value = parseInt(longBreakCountdown.countdown/60);
     }
     if (localStorage.getItem('interval')) {
-        longBreakCountdown.cycleLength = document.getElementById('interval').value = myLocalStorage.get('interval');
+        interval = document.getElementById('interval').value = myLocalStorage.get('interval');
     } 
     if (localStorage.getItem('volume')) {
         const vol = myLocalStorage.get('volume');

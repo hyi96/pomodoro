@@ -75,9 +75,9 @@ const shortBreakOver = new Event('shortBreakOver');
 const longBreakOver = new Event('longBreakOver');
 
 const timerDisplay = document.getElementById('timer');
-const pomoCountdown = new Countdown(10, timerDisplay, 'short-break');
-const shortBreakCountdown = new Countdown(10, timerDisplay, 'pomodoro');
-const longBreakCountdown = new Countdown(10, timerDisplay, 'pomodoro');
+const pomoCountdown = new Countdown(1500, timerDisplay, 'short-break');
+const shortBreakCountdown = new Countdown(300, timerDisplay, 'pomodoro');
+const longBreakCountdown = new Countdown(900, timerDisplay, 'pomodoro');
 let curCountdownName = 'pomodoro';
 timerDisplay.textContent = convertSecondsToMinSecString(pomoCountdown.countdown);
 const radioCountdownMap = {'pomodoro': pomoCountdown, 'short-break': shortBreakCountdown, 'long-break': longBreakCountdown};

@@ -54,7 +54,7 @@ class Countdown {
                 }
                 that.elapsed = 0;
             } 
-        }, 750);
+        }, 250);
     }
     stop() {
         if (this.interval!=null) {

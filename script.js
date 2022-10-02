@@ -63,7 +63,7 @@ class Countdown {
     }
     reset() { //stop timer and set timer back to full
         this.stop();
-        that.elapsed = 0;
+        this.elapsed = 0;
         this.display.textContent = convertSecondsToMinSecString(this.countdown); 
         showStart(true);
     }
@@ -75,9 +75,9 @@ const shortBreakOver = new Event('shortBreakOver');
 const longBreakOver = new Event('longBreakOver');
 
 const timerDisplay = document.getElementById('timer');
-const pomoCountdown = new Countdown(1500, timerDisplay, 'short-break');
-const shortBreakCountdown = new Countdown(300, timerDisplay, 'pomodoro');
-const longBreakCountdown = new Countdown(900, timerDisplay, 'pomodoro');
+const pomoCountdown = new Countdown(10, timerDisplay, 'short-break');
+const shortBreakCountdown = new Countdown(10, timerDisplay, 'pomodoro');
+const longBreakCountdown = new Countdown(10, timerDisplay, 'pomodoro');
 let curCountdownName = 'pomodoro';
 timerDisplay.textContent = convertSecondsToMinSecString(pomoCountdown.countdown);
 const radioCountdownMap = {'pomodoro': pomoCountdown, 'short-break': shortBreakCountdown, 'long-break': longBreakCountdown};
@@ -285,19 +285,19 @@ function loadSettings() {
         isAutoSwitching = myLocalStorage.get('autostart');
         document.getElementById('auto-switching').checked = isAutoSwitching;
     }
-    if (localStorage.getItem('pomodoro')) {
-        pomoCountdown.countdown = myLocalStorage.get('pomodoro');
-        document.getElementById('pomo-time').value = parseInt(pomoCountdown.countdown/60);
-        timerDisplay.textContent = convertSecondsToMinSecString(pomoCountdown.countdown);
-    }
-    if (localStorage.getItem('shortBreak')) {
-        shortBreakCountdown.countdown =  myLocalStorage.get('shortBreak');
-        document.getElementById('short-break-time').value = parseInt(shortBreakCountdown.countdown/60);
-    }
-    if (localStorage.getItem('longBreak')) {
-        longBreakCountdown.countdown = myLocalStorage.get('longBreak');
-        document.getElementById('long-break-time').value = parseInt(longBreakCountdown.countdown/60);
-    }
+    // if (localStorage.getItem('pomodoro')) {
+    //     pomoCountdown.countdown = myLocalStorage.get('pomodoro');
+    //     document.getElementById('pomo-time').value = parseInt(pomoCountdown.countdown/60);
+    //     timerDisplay.textContent = convertSecondsToMinSecString(pomoCountdown.countdown);
+    // }
+    // if (localStorage.getItem('shortBreak')) {
+    //     shortBreakCountdown.countdown =  myLocalStorage.get('shortBreak');
+    //     document.getElementById('short-break-time').value = parseInt(shortBreakCountdown.countdown/60);
+    // }
+    // if (localStorage.getItem('longBreak')) {
+    //     longBreakCountdown.countdown = myLocalStorage.get('longBreak');
+    //     document.getElementById('long-break-time').value = parseInt(longBreakCountdown.countdown/60);
+    // }
     if (localStorage.getItem('interval')) {
         interval = document.getElementById('interval').value = myLocalStorage.get('interval');
     } 
@@ -324,3 +324,5 @@ loadSettings();
 function clearStorage() {
     localStorage.clear();
 }
+
+clearStorage();

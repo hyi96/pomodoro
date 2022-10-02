@@ -257,19 +257,19 @@ let totalTime = 0; //in the unit of performance.now()
 function updateTotalTimeDisplay() {
     const totalMinutes = Math.trunc(totalTime/60000);
     const minutes = totalMinutes % 60;
-    const totalHours = (totalMinutes - minutes) / 60;
+    const totalHours = Math.trunc((totalMinutes - minutes)/60);
     const hours = totalHours % 24;
-    const days = (totalHours - hours) / 24;
+    const days = Math.trunc((totalHours-hours)/24);
 
-    let t = document.getElementById('mins');
-    t.textContent = minutes + ' minutes';
+    document.getElementById('mins').textContent = minutes + ' minutes ';
     if (totalMinutes >= 60) {
-        t = document.getElementById('hrs');
+        let t = document.getElementById('hrs');
         t.style.display = 'inline';
-        t.textContent = hours + ' hours';
+        t.textContent = hours + ' hours ';
         if (totalMinutes >= 1440) {
-            document.getElementById('days').style.display = 'inline';
-            t.textContent = days + ' days';
+            t = document.getElementById('days');
+            t.style.display = 'inline';
+            t.textContent = days + ' days ';
         }
     }
     myLocalStorage.set('totalTime', totalTime);

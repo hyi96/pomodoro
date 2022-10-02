@@ -255,7 +255,7 @@ document.getElementById('alarm-volume-slider').oninput = function() {
 let lastTimestamp;
 let totalTime = 0; //in the unit of performance.now()
 function updateTotalTimeDisplay() {
-    const totalMinutes = Math.floor(totalTime/60000);
+    const totalMinutes = Math.trunc(totalTime/60000);
     const minutes = totalMinutes % 60;
     const totalHours = (totalMinutes - minutes) / 60;
     const hours = totalHours % 24;

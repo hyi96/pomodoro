@@ -52,7 +52,6 @@ class Countdown {
                 } else {
                     that.reset();
                 }
-                that.elapsed = 0;
             } 
         }, 250);
     }
@@ -64,6 +63,7 @@ class Countdown {
     }
     reset() { //stop timer and set timer back to full
         this.stop();
+        that.elapsed = 0;
         this.display.textContent = convertSecondsToMinSecString(this.countdown); 
         showStart(true);
     }

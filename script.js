@@ -285,19 +285,19 @@ function loadSettings() {
         isAutoSwitching = myLocalStorage.get('autostart');
         document.getElementById('auto-switching').checked = isAutoSwitching;
     }
-    // if (localStorage.getItem('pomodoro')) {
-    //     pomoCountdown.countdown = myLocalStorage.get('pomodoro');
-    //     document.getElementById('pomo-time').value = parseInt(pomoCountdown.countdown/60);
-    //     timerDisplay.textContent = convertSecondsToMinSecString(pomoCountdown.countdown);
-    // }
-    // if (localStorage.getItem('shortBreak')) {
-    //     shortBreakCountdown.countdown =  myLocalStorage.get('shortBreak');
-    //     document.getElementById('short-break-time').value = parseInt(shortBreakCountdown.countdown/60);
-    // }
-    // if (localStorage.getItem('longBreak')) {
-    //     longBreakCountdown.countdown = myLocalStorage.get('longBreak');
-    //     document.getElementById('long-break-time').value = parseInt(longBreakCountdown.countdown/60);
-    // }
+    if (localStorage.getItem('pomodoro')) {
+        pomoCountdown.countdown = myLocalStorage.get('pomodoro');
+        document.getElementById('pomo-time').value = parseInt(pomoCountdown.countdown/60);
+        timerDisplay.textContent = convertSecondsToMinSecString(pomoCountdown.countdown);
+    }
+    if (localStorage.getItem('shortBreak')) {
+        shortBreakCountdown.countdown =  myLocalStorage.get('shortBreak');
+        document.getElementById('short-break-time').value = parseInt(shortBreakCountdown.countdown/60);
+    }
+    if (localStorage.getItem('longBreak')) {
+        longBreakCountdown.countdown = myLocalStorage.get('longBreak');
+        document.getElementById('long-break-time').value = parseInt(longBreakCountdown.countdown/60);
+    }
     if (localStorage.getItem('interval')) {
         interval = document.getElementById('interval').value = myLocalStorage.get('interval');
     } 
@@ -325,4 +325,4 @@ function clearStorage() {
     localStorage.clear();
 }
 
-clearStorage();
+

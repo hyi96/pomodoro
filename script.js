@@ -23,6 +23,7 @@ class Countdown {
         this.display = display;
         this.nextCoundownName = nextCoundownName;
         this.startTimestamp; //in ms
+        this.elapsed = 0; // in ms
     }
     start() {
         let that = this;
@@ -40,8 +41,8 @@ class Countdown {
                 }
             }
 
-            const sec = (pNow-that.startTimestamp)/1000;
-            that.display.textContent = document.title = convertSecondsToMinSecString(that.countdown - Math.floor(sec)); 
+            const sec = (pNow-that.startTimestamp + that.elapsed)/1000;
+            that.display.textContent = document.title = convertSecondsToMinSecString(that.countdown - Math.trunc(sec)); 
             document.title += ' ' + curCountdownName;
 
             if (sec >= that.countdown) {
@@ -51,11 +52,15 @@ class Countdown {
                 } else {
                     that.reset();
                 }
+                that.elapsed = 0;
             } 
-        }, 1000);
+        }, 750);
     }
     stop() {
-        if (this.interval!=null) clearInterval(this.interval);
+        if (this.interval!=null) {
+            clearInterval(this.interval);
+            this.elapsed += performance.now() - this.startTimestamp;
+        }
     }
     reset() { //stop timer and set timer back to full
         this.stop();
